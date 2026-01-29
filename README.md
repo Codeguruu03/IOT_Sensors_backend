@@ -1,179 +1,257 @@
-# IoT Sensor Backend
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-20_LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Express-4.x-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express"/>
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
+  <img src="https://img.shields.io/badge/MQTT-Mosquitto-660066?style=for-the-badge&logo=eclipsemosquitto&logoColor=white" alt="MQTT"/>
+</p>
 
-A Node.js backend service for ingesting and retrieving IoT sensor temperature readings.
+# 🌡️ IoT Sensor Backend
 
-## Tech Stack
+A production-ready Node.js REST API for ingesting and retrieving IoT sensor temperature readings with real-time MQTT support.
 
-- **Node.js 20 LTS** - Runtime
-- **Express.js** - REST API framework
-- **MongoDB Atlas** - Cloud database
-- **Mongoose** - MongoDB ODM
-- **MQTT** - Real-time IoT messaging (Bonus)
+## ✨ Features
 
-## Setup
+- **RESTful API** - POST sensor data & GET latest readings
+- **MongoDB Atlas** - Cloud-hosted NoSQL database
+- **MQTT Integration** - Real-time sensor data ingestion via pub/sub
+- **Input Validation** - Required field validation with proper error responses
+- **Auto Timestamps** - Server-side timestamp generation when not provided
 
-### 1. Install Dependencies
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v18+ or v20 LTS
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) account (FREE tier available)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/iot-sensor-backend.git
+cd iot-sensor-backend
+
+# Install dependencies
 npm install
-```
 
-### 2. Configure Environment
-
-Copy the example environment file:
-
-```bash
+# Configure environment variables
 cp .env.example .env
-```
+# Edit .env with your MongoDB Atlas connection string
 
-Then edit `.env` with your MongoDB Atlas connection string:
-
-```env
-PORT=3000
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/iot_sensors?retryWrites=true&w=majority
-```
-
-> **Need MongoDB Atlas?** Sign up for FREE at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas) (no credit card required)
-
-### 3. Run the Server
-
-```bash
-# Development (with hot-reload)
+# Start development server
 npm run dev
-
-# Production
-npm start
 ```
 
-## API Endpoints
+### Environment Variables
 
-### POST `/api/sensor/ingest`
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `PORT` | Server port | `3000` |
+| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/iot_sensors` |
 
-Ingest sensor temperature readings.
+---
+
+## 📡 API Reference
+
+### Base URL
+```
+http://localhost:3000/api/sensor
+```
+
+### Endpoints
+
+#### `POST /ingest` - Ingest Sensor Data
+
+Accepts temperature readings from IoT devices.
 
 **Request Body:**
 ```json
 {
   "deviceId": "sensor-01",
-  "temperature": 32.1,
-  "timestamp": 1705312440000
+  "temperature": 32.5,
+  "timestamp": 1705312440000  // Optional - defaults to current time
 }
 ```
 
-> Note: `timestamp` is optional. If not provided, defaults to current time.
-
-**Example (curl):**
-```bash
-curl -X POST http://localhost:3000/api/sensor/ingest \
-  -H "Content-Type: application/json" \
-  -d '{"deviceId": "sensor-01", "temperature": 32.1}'
-```
-
-**Response (201):**
+**Response `201 Created`:**
 ```json
 {
-  "_id": "...",
+  "_id": "65a5f8c7b1234567890abcde",
   "deviceId": "sensor-01",
-  "temperature": 32.1,
+  "temperature": 32.5,
   "timestamp": 1705312440000,
   "createdAt": "2024-01-15T10:00:00.000Z",
   "updatedAt": "2024-01-15T10:00:00.000Z"
+}
+```
+
+**Error `400 Bad Request`:**
+```json
+{
+  "message": "deviceId and temperature are required"
 }
 ```
 
 ---
 
-### GET `/api/sensor/:deviceId/latest`
+#### `GET /:deviceId/latest` - Get Latest Reading
 
-Retrieve the latest reading for a specific device.
+Returns the most recent reading for a specific device.
 
-**Example (curl):**
-```bash
-curl http://localhost:3000/api/sensor/sensor-01/latest
+**Example:**
+```
+GET /api/sensor/sensor-01/latest
 ```
 
-**Response (200):**
+**Response `200 OK`:**
 ```json
 {
-  "_id": "...",
+  "_id": "65a5f8c7b1234567890abcde",
   "deviceId": "sensor-01",
-  "temperature": 32.1,
+  "temperature": 32.5,
   "timestamp": 1705312440000,
   "createdAt": "2024-01-15T10:00:00.000Z",
   "updatedAt": "2024-01-15T10:00:00.000Z"
 }
 ```
 
-**Response (404):**
+**Error `404 Not Found`:**
 ```json
 {
   "message": "No data found"
 }
 ```
 
-## MQTT Integration (Bonus)
+---
 
-The server automatically subscribes to MQTT topic `iot/sensor/+/temperature` on the public broker `test.mosquitto.org`.
+## 🧪 Testing
 
-### Simulate a Device
+### Using cURL
 
-Run the device simulator in a separate terminal:
+```bash
+# POST - Ingest sensor data
+curl -X POST http://localhost:3000/api/sensor/ingest \
+  -H "Content-Type: application/json" \
+  -d '{"deviceId": "sensor-01", "temperature": 32.5}'
+
+# GET - Retrieve latest reading
+curl http://localhost:3000/api/sensor/sensor-01/latest
+```
+
+### Using PowerShell
+
+```powershell
+# POST - Ingest sensor data
+Invoke-RestMethod -Uri "http://localhost:3000/api/sensor/ingest" `
+  -Method POST -ContentType "application/json" `
+  -Body '{"deviceId": "sensor-01", "temperature": 32.5}'
+
+# GET - Retrieve latest reading
+Invoke-RestMethod -Uri "http://localhost:3000/api/sensor/sensor-01/latest"
+```
+
+---
+
+## 📶 MQTT Integration (Bonus)
+
+The server subscribes to MQTT topics for real-time sensor data ingestion.
+
+**Broker:** `mqtt://test.mosquitto.org`  
+**Topic Pattern:** `iot/sensor/<deviceId>/temperature`
+
+### Simulate IoT Device
 
 ```bash
 node simulateDevice.js
 ```
 
-This publishes random temperature readings every 5 seconds.
+This publishes random temperature readings every 5 seconds:
 
-### MQTT Message Format
-
-**Topic:** `iot/sensor/<deviceId>/temperature`
-
-**Payload:**
-```json
-{
-  "temperature": 32.1
-}
+```
+Topic: iot/sensor/sensor-01/temperature
+Payload: { "temperature": 28.45 }
 ```
 
-## Project Structure
+---
+
+## 🏗️ Project Structure
 
 ```
 ├── src/
-│   ├── server.js           # Entry point
-│   ├── app.js              # Express configuration
+│   ├── server.js              # Application entry point
+│   ├── app.js                 # Express app configuration
 │   ├── config/
-│   │   └── db.js           # MongoDB connection
+│   │   └── db.js              # MongoDB connection handler
 │   ├── controllers/
-│   │   └── sensor.controller.js
+│   │   └── sensor.controller.js  # Request handlers
 │   ├── models/
-│   │   └── Sensor.js       # Mongoose schema
+│   │   └── Sensor.js          # Mongoose schema
 │   ├── mqtt/
-│   │   └── subscriber.js   # MQTT subscriber
+│   │   └── subscriber.js      # MQTT client & message handler
 │   └── routes/
-│       └── sensor.routes.js
-├── simulateDevice.js       # MQTT device simulator
-├── .env                    # Environment variables
-└── package.json
+│       └── sensor.routes.js   # API route definitions
+├── simulateDevice.js          # MQTT device simulator
+├── .env.example               # Environment template
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-## Database Schema
+---
 
-| Field       | Type   | Required | Description                    |
-|-------------|--------|----------|--------------------------------|
-| deviceId    | String | Yes      | Unique device identifier       |
-| temperature | Number | Yes      | Temperature reading            |
-| timestamp   | Number | Yes      | Epoch milliseconds             |
-| createdAt   | Date   | Auto     | Document creation time         |
-| updatedAt   | Date   | Auto     | Document last update time      |
+## 📊 Database Schema
 
-## Testing with Postman
+**Collection:** `sensors`
 
-1. Import requests to Postman
-2. Set base URL: `http://localhost:3000`
-3. Test POST `/api/sensor/ingest` with JSON body
-4. Test GET `/api/sensor/sensor-01/latest`
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `deviceId` | String | ✅ | Unique identifier for the IoT device |
+| `temperature` | Number | ✅ | Temperature reading in °C |
+| `timestamp` | Number | ✅ | Unix timestamp (ms) - auto-generated if not provided |
+| `createdAt` | Date | Auto | Document creation timestamp |
+| `updatedAt` | Date | Auto | Last update timestamp |
 
-## License
+---
 
-ISC
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **Node.js 20 LTS** | JavaScript runtime |
+| **Express.js 4.x** | Web framework |
+| **MongoDB Atlas** | Cloud database |
+| **Mongoose 8.x** | MongoDB ODM |
+| **MQTT.js 5.x** | MQTT client library |
+| **dotenv** | Environment configuration |
+| **nodemon** | Development hot-reload |
+
+---
+
+## 📝 Scripts
+
+```bash
+npm start      # Production server
+npm run dev    # Development with hot-reload
+```
+
+---
+
+## 🔒 Security Notes
+
+- Never commit `.env` files to version control
+- Use environment variables for all sensitive data
+- MongoDB Atlas provides built-in authentication and encryption
+
+---
+
+## 📄 License
+
+ISC © 2024
+
+---
+
+<p align="center">
+  Built with ❤️ for IoT
+</p>
