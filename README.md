@@ -49,7 +49,7 @@ npm run dev
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `PORT` | Server port | `3000` |
-| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/iot_sensors` |
+| `MONGO_URI` | MongoDB connection string | `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/iot_sensors` |
 
 ---
 
