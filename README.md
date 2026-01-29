@@ -20,14 +20,20 @@ npm install
 
 ### 2. Configure Environment
 
-Create a `.env` file in the root directory:
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` with your MongoDB Atlas connection string:
 
 ```env
 PORT=3000
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/iot_sensors?retryWrites=true&w=majority
 ```
 
-Replace with your MongoDB Atlas connection string.
+> **Need MongoDB Atlas?** Sign up for FREE at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas) (no credit card required)
 
 ### 3. Run the Server
 
