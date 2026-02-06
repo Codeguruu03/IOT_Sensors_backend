@@ -8,10 +8,12 @@
     "dev": "nodemon src/server.js"
   },
   "dependencies": {
+    "dotenv": "^16.4.1",
     "express": "^4.19.2",
     "mongoose": "^8.0.3",
-    "dotenv": "^16.4.1",
-    "mqtt": "^5.4.0"
+    "mqtt": "^5.4.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"

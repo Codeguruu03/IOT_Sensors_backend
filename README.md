@@ -3,6 +3,7 @@
   <img src="https://img.shields.io/badge/Express-4.x-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express"/>
   <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
   <img src="https://img.shields.io/badge/MQTT-Mosquitto-660066?style=for-the-badge&logo=eclipsemosquitto&logoColor=white" alt="MQTT"/>
+  <img src="https://img.shields.io/badge/Swagger-OpenAPI_3.0-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger"/>
 </p>
 
 # 🌡️ IoT Sensor Backend
@@ -12,6 +13,7 @@ A production-ready Node.js REST API for ingesting and retrieving IoT sensor temp
 ## ✨ Features
 
 - **RESTful API** - POST sensor data & GET latest readings
+- **Swagger UI** - Interactive API documentation at `/api-docs`
 - **MongoDB Atlas** - Cloud-hosted NoSQL database
 - **MQTT Integration** - Real-time sensor data ingestion via pub/sub
 - **Input Validation** - Required field validation with proper error responses
@@ -50,6 +52,22 @@ npm run dev
 |----------|-------------|---------|
 | `PORT` | Server port | `3000` |
 | `MONGO_URI` | MongoDB connection string | `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/iot_sensors` |
+
+---
+
+## 📚 API Documentation (Swagger UI)
+
+Interactive API documentation is available at:
+
+```
+http://localhost:3000/api-docs
+```
+
+Swagger UI provides:
+- 📖 Complete API specification
+- 🧪 **Try it out** - Test endpoints directly in browser
+- 📋 Request/Response schemas
+- 📝 Example payloads
 
 ---
 
@@ -224,6 +242,7 @@ Payload: { "temperature": 28.45 }
 | **MongoDB Atlas** | Cloud database |
 | **Mongoose 8.x** | MongoDB ODM |
 | **MQTT.js 5.x** | MQTT client library |
+| **Swagger UI** | Interactive API documentation |
 | **dotenv** | Environment configuration |
 | **nodemon** | Development hot-reload |
 
